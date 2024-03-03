@@ -15,7 +15,7 @@ Before running the simulation, ensure that you have the following prerequisites 
 ### Installation
 1. Clone this repository to your local machine:
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/Richard-YH/NDNNetSimulator.git
     ```
 2. Compile the ns-3 simulation environment with ndnSIM module.
 3. Ensure that all necessary libraries and dependencies are installed.
