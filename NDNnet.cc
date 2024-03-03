@@ -129,19 +129,28 @@ int main(int argc, char* argv[])
   ndnHelper.InstallAll();
 
   // Choosing forwarding strategy
-  /*
-    To DO 1 : Please use multicast !
-  */
+  ndn::StrategyChoiceHelper::InstallAll("/", "/localhost/nfd/strategy/multicast");
 
-  // consumer
-  /*
-    To Do 2 : Implement the consumer setting
-  */
+  // consumer: Implement the consumer setting
+  for (const auto& consumer_info : consumers_rec) {
+    ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
+    consumerHelper.SetPrefix(consumer_info.prefix);
+    consumerHelper.SetAttribute("Frequency", StringValue(consumer_info.interest_per_second));
 
-  // Producer
-  /*
-    To Do 3 : Implement the producer setting
-  */
+    int consumerNodeId = stoi(consumer_info.consumer);
+    auto apps = consumerHelper.Install(nodes.Get(consumerNodeId));
+    apps.Stop(Seconds(stod(consumer_info.app_duration_time)));
+  }
+
+  // Producer: Implement the producer setting
+  for (const auto& producer_info : producers_rec) {
+    ndn::AppHelper producerHelper("ns3::ndn::Producer");
+    producerHelper.SetPrefix(producer_info.prefix);
+    producerHelper.SetAttribute("PayloadSize", StringValue("1024")); // You can adjust the payload size as needed
+
+    int producerNodeId = stoi(producer_info.producer);
+    producerHelper.Install(nodes.Get(producerNodeId));
+  }
   
   Simulator::Stop(Seconds(20.0));
 
